@@ -94,8 +94,6 @@ class SeriesKaoProvider : MainAPI() {
         }
     }
 
-    // Esta etiqueta silencia el error de "Deprecated" permitiendo que compile
-    @Suppress("DEPRECATION")
     override suspend fun loadLinks(
         data: String,
         isCasting: Boolean,
@@ -134,15 +132,16 @@ class SeriesKaoProvider : MainAPI() {
             servers.forEach { server ->
                 val cleanUrl = server.url.replace("\\/", "/")
                 
+                // SOLUCIÓN FINAL: Usamos newExtractorLink con la sintaxis moderna de Cloudstream
                 callback(
-                    ExtractorLink(
-                        source = server.title,
+                    newExtractorLink(
                         name = server.title,
-                        url = cleanUrl,
-                        referer = mainUrl,
-                        quality = getQuality(server.title),
-                        isM3u8 = cleanUrl.contains(".m3u8", ignoreCase = true)
-                    )
+                        source = server.title,
+                        url = cleanUrl
+                    ).apply {
+                        this.quality = getQuality(server.title)
+                        this.referer = mainUrl
+                    }
                 )
             }
             servers.isNotEmpty()

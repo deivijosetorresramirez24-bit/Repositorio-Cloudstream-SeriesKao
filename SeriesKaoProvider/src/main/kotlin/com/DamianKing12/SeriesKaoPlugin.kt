@@ -7,7 +7,7 @@ import android.content.Context
 @CloudstreamPlugin
 class SeriesKaoPlugin: Plugin() {
     override fun load(context: Context) {
-        // Al ser explícitos evitamos que el compilador falle si hay micro-cambios en la API
+        // Registro corregido para la versión actual
         registerMainAPI(SeriesKaoProvider())
     }
 }

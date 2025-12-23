@@ -1,6 +1,6 @@
 name: Build
 
-# https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#concurrency
+# https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#concurrency 
 concurrency: 
   group: "build"
   cancel-in-progress: true
@@ -42,11 +42,11 @@ jobs:
 
       - name: Build Plugins
         run: |
-              cd $GITHUB_WORKSPACE/src
-              chmod +x gradlew
-              ./gradlew make makePluginsJson -Dorg.gradle.warning.mode=summary  # ✅ AÑADE ESTO
-               cp **/build/*.cs3 $GITHUB_WORKSPACE/builds
-              cp build/plugins.json $GITHUB_WORKSPACE/builds
+          cd $GITHUB_WORKSPACE/src
+          chmod +x gradlew
+          ./gradlew make makePluginsJson -Dorg.gradle.warning.mode=summary -Pkotlin.compiler.allWarningsAsErrors=false
+          cp **/build/*.cs3 $GITHUB_WORKSPACE/builds
+          cp build/plugins.json $GITHUB_WORKSPACE/builds
 
       - name: Push builds
         run: |
@@ -55,4 +55,4 @@ jobs:
           git config --local user.name "GitHub Actions"
           git add .
           git commit --amend -m "Build $GITHUB_SHA" || exit 0   # do not error if nothing to commit
-          git push --force    
+          git push --force

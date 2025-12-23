@@ -58,6 +58,7 @@ subprojects {
         tasks.withType<KotlinJvmCompile> {
             compilerOptions {
                 jvmTarget.set(JvmTarget.JVM_1_8) // Required
+                allWarningsAsErrors.set(false)  // ✅ ESTA LÍNEA ESTÁ CORREGIDA
                 freeCompilerArgs.addAll(
                     "-Xno-call-assertions",
                     "-Xno-param-assertions",

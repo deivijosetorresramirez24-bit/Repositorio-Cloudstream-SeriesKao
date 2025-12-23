@@ -1,6 +1,6 @@
 name: Build
 
-# https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#concurrency 
+# https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#concurrency  
 concurrency: 
   group: "build"
   cancel-in-progress: true
@@ -44,7 +44,7 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/src
           chmod +x gradlew
-          ./gradlew make makePluginsJson -Dorg.gradle.warning.mode=summary -Pkotlin.compiler.allWarningsAsErrors=false
+          ./gradlew make makePluginsJson -Dorg.gradle.warning.mode=summary -Pkotlin.compiler.allWarningsAsErrors=false --no-daemon
           cp **/build/*.cs3 $GITHUB_WORKSPACE/builds
           cp build/plugins.json $GITHUB_WORKSPACE/builds
 

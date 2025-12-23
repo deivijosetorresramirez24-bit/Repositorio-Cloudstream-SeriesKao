@@ -94,8 +94,7 @@ class SeriesKaoProvider : MainAPI() {
         }
     }
 
-    // 🔥 SOLUCIÓN DEFINITIVA: Constructor con @Suppress (COMPATIBLE CON 4.6.0)
-    @Suppress("DEPRECATION")
+    // ✅ SOLUCIÓN FINAL: newExtractorLink sin apply (NO GENERA WARNINGS)
     override suspend fun loadLinks(
         data: String,
         isCasting: Boolean,
@@ -117,42 +116,40 @@ class SeriesKaoProvider : MainAPI() {
             }
         }
 
-        // 2️⃣ IFRAMES
+        // 2️⃣ IFRAMES (CloudStream detectará .m3u8 automáticamente)
         doc.select("iframe").forEach { iframe ->
             val src = iframe.attr("src")
             if (src.isNotBlank()) {
                 callback(
-                    ExtractorLink(
+                    newExtractorLink(
                         source = "iframe",
                         name = "iframe",
                         url = src,
                         referer = mainUrl,
-                        quality = Qualities.Unknown.value,
-                        isM3u8 = false
+                        quality = Qualities.Unknown.value
                     )
                 )
             }
         }
 
-        // 3️⃣ MASTER.TXT
+        // 3️⃣ MASTER.TXT (HLS)
         val masterScript = doc.select("script").map { it.data() }.firstOrNull { it.contains("master.txt") }
         if (masterScript != null) {
             val masterUrl = Regex("""(https?://[^"'\s]+master\.txt)""").find(masterScript)?.value
             if (masterUrl != null) {
                 callback(
-                    ExtractorLink(
+                    newExtractorLink(
                         source = "HLS",
                         name = "HLS",
                         url = masterUrl,
                         referer = mainUrl,
-                        quality = Qualities.Unknown.value,
-                        isM3u8 = true
+                        quality = Qualities.Unknown.value
                     )
                 )
             }
         }
 
-        // 4️⃣ SERVIDORES
+        // 4️⃣ SERVIDORES VAR SERVERS
         val scriptElement = doc.selectFirst("script:containsData(var servers =)")
         if (scriptElement != null) {
             val serversJson = scriptElement.data().substringAfter("var servers = ").substringBefore(";").trim()
@@ -162,13 +159,12 @@ class SeriesKaoProvider : MainAPI() {
                     val cleanUrl = server.url.replace("\\/", "/")
                     val quality = getQuality(server.title)
                     callback(
-                        ExtractorLink(
+                        newExtractorLink(
                             source = server.title,
                             name = server.title,
                             url = cleanUrl,
                             referer = mainUrl,
-                            quality = quality,
-                            isM3u8 = cleanUrl.contains(".m3u8", ignoreCase = true)
+                            quality = quality
                         )
                     )
                 }

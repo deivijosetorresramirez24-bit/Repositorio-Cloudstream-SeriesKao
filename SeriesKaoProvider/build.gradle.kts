@@ -42,8 +42,8 @@ dependencies {
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     
-    // CORRECCIÓN: Usamos la ruta de repositorio completa para que JitPack lo encuentre
-    implementation("com.github.recloudstream:cloudstream:4.6.0")
+    // Cambiamos a master-SNAPSHOT que suele estar más disponible en el caché de JitPack
+    implementation("com.github.recloudstream:cloudstream:master-SNAPSHOT")
     
     implementation(kotlin("stdlib"))
     implementation("com.github.Blatzar:NiceHttp:0.4.11")

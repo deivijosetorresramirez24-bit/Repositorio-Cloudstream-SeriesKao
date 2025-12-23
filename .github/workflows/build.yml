@@ -41,8 +41,10 @@ jobs:
       - name: Build Plugins
         run: |
           chmod +x gradlew
-          ./gradlew :SeriesKaoProvider:make makePluginsJson --no-daemon
+          # Comando optimizado con mayor tiempo de espera para evitar el 'Read timed out'
+          ./gradlew :SeriesKaoProvider:make makePluginsJson --no-daemon --stacktrace -Dorg.gradle.internal.http.socketTimeout=120000 -Dorg.gradle.internal.http.connectionTimeout=120000
           
+          # Copiamos los archivos generados a la carpeta que subiremos
           mkdir -p build-output
           cp SeriesKaoProvider/build/*.cs3 build-output/ || true
           cp build/plugins.json build-output/ || true

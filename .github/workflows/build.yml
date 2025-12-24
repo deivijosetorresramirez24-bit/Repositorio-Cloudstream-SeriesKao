@@ -41,12 +41,13 @@ jobs:
       - name: Build Plugins
         run: |
           chmod +x gradlew
-          # Comando optimizado con mayor tiempo de espera para evitar el 'Read timed out'
-          ./gradlew :SeriesKaoProvider:make makePluginsJson --no-daemon --stacktrace -Dorg.gradle.internal.http.socketTimeout=120000 -Dorg.gradle.internal.http.connectionTimeout=120000
+          # Cambiamos 'make' por 'assembleDebug' para evitar el error de Plugin class
+          ./gradlew :SeriesKaoProvider:assembleDebug makePluginsJson --no-daemon --stacktrace -Dorg.gradle.internal.http.socketTimeout=120000 -Dorg.gradle.internal.http.connectionTimeout=120000
           
-          # Copiamos los archivos generados a la carpeta que subiremos
+          # Copiamos los archivos generados. Nota: assembleDebug genera un .aar o .apk
           mkdir -p build-output
-          cp SeriesKaoProvider/build/*.cs3 build-output/ || true
+          cp SeriesKaoProvider/build/outputs/aar/*.aar build-output/ || true
+          cp SeriesKaoProvider/build/outputs/apk/debug/*.apk build-output/ || true
           cp build/plugins.json build-output/ || true
 
       - name: Push builds

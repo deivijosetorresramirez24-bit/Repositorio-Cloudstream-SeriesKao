@@ -44,7 +44,9 @@ class SeriesKaoProvider : MainAPI() {
                 ?: return false
 
             val folderId = Regex("/(\\d{5})/$fileCode")
-                .find(iframeResponse)?.groupValues?.get(1)
+                .find(iframeResponse)
+                ?.groupValues
+                ?.get(1)
                 ?: "06438"
 
             // Handshake obligatorio
